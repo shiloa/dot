@@ -1,0 +1,112 @@
+# <Quixey settings>
+#git config --global color.ui                  # for helpful coloring on common commands like diff, log, and status.
+#git config --global rerere.enabled true       # turns on recording of merge resolutions so that if you ever do the same merge twice it will remember the resolution for you.
+#git config --global pack.threads 0            # enables faster repository packing for multicore machines.
+#git config --global push.default upstream     # tells git to only push your current branch when you type git push.
+#git config --global merge.conflictstyle diff3 # shows the merge base in addition to the two conflicting results, making it much easier to see how to resolve conflicts.
+#git config --global user.name Shiran # Name for all commits
+# </Quixey settings>
+[user]
+	name = Shilo Ayalon
+	email = shilo@quixey.com
+[core]
+	excludesfile = /Users/shilo/.gitignore_global
+[color]
+  ui = auto
+[diff]
+[color]
+[alias]
+    st = status -sb
+    ci = commit
+    co = checkout
+    di = diff
+    dt = difftool
+    dis = diff --staged
+    dc = diff --cached
+    amend = commit --amend
+    aa = add --all
+    ff = merge --ff-only
+    pullff = pull --ff-only
+    noff = merge --no-ff
+    fa = fetch --all
+    b = branch
+    lb = branch --column # list local branches
+    branches = branch -a # list all existing branches
+    delete = branch -d   # delete a branch
+    ds = diff --stat=160,120
+    dh1 = diff HEAD~1
+    pom = pull origin master
+    pod = pull origin develop
+    fo = fetch origin
+    undo-commit = reset --soft HEAD~1 # undo the last commit
+    nb = "!f() { git push origin develop:$1 && git checkout $1; }; f" # create a new remote branch and switch to it
+    nbm = "!f() { git push origin master:$1 && git checkout $1; }; f" # create a new remote branch and switch to it
+    nbx = "!f() { git push origin $1:$2 && git checkout $2; }; f" # create a new remote branch and switch to it
+    cod = "!f() { git checkout develop && git pull origin develop; }; f"
+    podr = pull origin develop --rebase # pull origin/develop and rebase
+    dsf = "!git diff --color $@ | diff-so-fancy"
+
+    # see incoming/outgoing changes
+    #in = fetch && git log ..origin/master
+    #out = fetch && git log origin/master..
+
+    # Divergence (commits we added and commits remote added)
+    div = divergence
+
+    # Goodness (summary of diff lines added/removed/total)
+    gn = goodness
+    gnc = goodness --cached
+
+    # Fancy logging.
+    #   h = head
+    #   hp = head with patch
+    #   r = recent commits, only current branch
+    #   ra = recent commits, all reachable refs
+    #   l = all commits, only current branch
+    #   la = all commits, all reachable refs
+    head = !git l -1
+    h = !git head
+    hp = "!. ~/.githelpers && show_git_head"
+    r = !git l -30
+    ra = !git r --all
+    l = "!. ~/.githelpers && pretty_git_log"
+    la = !git l --all
+
+    # list all stash content
+    sl = "!. ~/.githelpers && show_git_stashes"
+
+
+[merge]
+    tool = vimdiff
+[difftool "vimdiff"]
+    # cmd = "vimdiff -R $LOCAL -c ':set noreadonly' $REMOTE "
+	cmd = "vimdiff $LOCAL $REMOTE "
+
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[push]
+	default = simple
+[credential "https://github.com"]
+	username = shiloa
+[credential]
+	helper = store
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[pager]
+	# diff = diff-so-fancy | less --tabs=1,5 -RFX
+	# show = diff-so-fancy | less --tabs=1,5 -RFX
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
