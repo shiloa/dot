@@ -58,7 +58,7 @@ source $HOME/.config/fish/fzf.fish
 
 
 function current_time
-    printf '%s' (date +%H:%m)
+    printf '%s' (date +%H:%M)
 end
 
 function fish_prompt
