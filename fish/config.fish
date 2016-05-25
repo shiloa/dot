@@ -4,6 +4,10 @@ set -g -x TERM xterm-256color
 # environment path
 set PATH "/usr/local/bin" $PATH
 
+# locale seems to be important
+set -x LC_ALL en_US.UTF-8 
+set -x LANG en_US.UTF-8
+
 # load rbenv
 set PATH $HOME/.rbenv/bin $PATH
 set PATH $HOME/.rbenv/shims $PATH
