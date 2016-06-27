@@ -57,6 +57,24 @@ Plug 'elzr/vim-json'                    " Better JSON syntax highlight support f
 Plug 'tpope/vim-jdaddy'                 " JSON manipulation and pretty printing
 Plug 'altercation/vim-colors-solarized' " Solarized color theme
 
+" Experimental Clojure Stuff
+Plug 'tpope/vim-fireplace'
+Plug 'guns/vim-clojure-static'
+Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'kovisoft/paredit'
+" Plug 'venantius/vim-eastwood'
+
+au VimEnter * RainbowParentheses
+let g:rainbow#max_level = 16
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}'], ['<', '>']]
+
+" List of colors that you do not want. ANSI code or #RRGGBB
+let g:rainbow#blacklist = [233, 234]
+
+" au Syntax * RainbowParenthesesLoadRound
+" au Syntax * RainbowParenthesesLoadSquare
+" au Syntax * RainbowParenthesesLoadBraces
+
 "**** Plugs that were once interesting, but
 "**** not anymore (maybe someday)
 
