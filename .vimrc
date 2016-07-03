@@ -57,6 +57,9 @@ Plug 'elzr/vim-json'                    " Better JSON syntax highlight support f
 Plug 'tpope/vim-jdaddy'                 " JSON manipulation and pretty printing
 Plug 'altercation/vim-colors-solarized' " Solarized color theme
 
+" Elixir?... Why not.
+Plug 'elixir-lang/vim-elixir'
+
 " Experimental Clojure Stuff
 Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-clojure-static'
@@ -641,7 +644,6 @@ nnoremap <leader>. :call OpenTestAlternate()<cr>
 map <leader>t :call RunPytestOnCurrentFile()<cr>
 map <leader>T :call RunNearestPytest()<cr>
 map <leader>d :call AddPDBSetTrace()<cr>
-map <leader>D :call ToggleImportPDB()<cr>
 "map <leader>c :w\|:!cucumber --drb %<cr>
 "map <leader>c :w\|:!script/features<cr>
 "map <leader>w :w\|:!script/features --profile wip<cr>
@@ -718,60 +720,7 @@ function! RunNearestPytest()
   exec ":!py.test --verbose --random -vv " . test_path
 endfunction
 
-
-
-" Add 'import ipdb' at top of file if doesn't exist
-function! AddImportPDB()
-  if expand('%:e') == 'py'
-    " add it at the top of the file
-    " on line 3
-    exec ":2"
-    call append(line('.'), 'import pdb')
-  endif
-endfunction
-
 " Remove 'import ipdb' at top of file if exists
-function! RemoveImportPDB()
-  if expand('%:e') == 'py'
-    if search('import pdb', 'bw') != 0
-      exec ":d"
-    endif
-  endif
-endfunction
-
-" Check if ImportPDB exists
-function! HasImportPDB() abort
-    let current_line_num = line('.')
-
-    if search('import pdb', 'bw') != 0
-      " return to original line
-      exec ":" . current_line_num
-      return 1
-    endif
-
-    return 0
-endfunction
-
-function! ToggleImportPDB()
-  let extension = expand('%:e')
-
-  if extension == 'py'
-    " save the location of the current line
-    let current_line_num = line('.')
-
-    let has_pdb = HasImportPDB()
-
-    if HasImportPDB() != 0
-      call RemoveImportPDB()
-    else
-      call AddImportPDB()
-    endif
-
-    " go back to original line
-    exec ":" . current_line_num
-  endif
-endfunction
-
 " add ipdb.set_trace trace above the current lin
 function! AddPDBSetTrace()
 
@@ -780,22 +729,8 @@ function! AddPDBSetTrace()
     let current_line = getline('.')
 
     let line_offset = 1
-    let has_import = HasImportPDB()
-
-    " make sure pdb is imported
-    if has_import == 0
-      call AddImportPDB()
-      let line_offset = 2
-    endif
 
     echo current_line_num
-
-    " go back to original line
-    if has_import != 0
-      exec ":" . current_line_num
-    else
-      exec ":" . ( current_line_num + 1 )
-    endif
 
     " update current line number
     let current_line_num = line('.')
@@ -803,12 +738,15 @@ function! AddPDBSetTrace()
     " get the indent level
     let indent_level = IndentLevel(current_line_num)
 
-    " create a properly indented ipdb.set_trace statement
-    let fmt_str = "%" . ( indent_level + len('pdb.set_trace()') ) . "S"
-    let set_trace_str = printf(fmt_str, 'pdb.set_trace()')
+    " create a properly indented pdb.set_trace statement
+    let fmt_str = "%" . ( indent_level + len('import pdb; pdb.set_trace()') ) . "S"
+    let set_trace_str = printf(fmt_str, 'import pdb; pdb.set_trace()')
 
     " add the import line above the current line
     call append((current_line_num - 1), set_trace_str)
+
+    " Save the buffer
+    exec ":w"
   endif
 endfunction
 
