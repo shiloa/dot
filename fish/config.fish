@@ -5,7 +5,11 @@ set -g -x TERM xterm-256color
 set PATH "/usr/local/bin" $PATH
 
 # locale seems to be important
-set -x LC_ALL en_US.UTF-8 
+set -x LC_ALL en_US.UTF-8
+set -x LANG en_US.UTF-8
+
+# locale seems to be important
+set -x LC_ALL en_US.UTF-8
 set -x LANG en_US.UTF-8
 
 # load rbenv
@@ -15,13 +19,12 @@ rbenv rehash >/dev/null ^&1
 
 # node JS path
 # node/npm setup
-set NODE_PATH $HOME/node_modules /usr/local/lib/node_modules /usr/local/share/npm/lib/node_modules
-set PATH /usr/local/share/npm/bin $PATH
+set NODE_PATH $HOME/node_modules /usr/local/lib/node_modules
 
 # load pyenv
 # set -g -x PYENV_ROOT $HOME/.pyenv
 # set PATH $PYENV_ROOT/bin $PATH
-status --is-interactive; and . (pyenv init -|psub)
+# status --is-interactive; and . (pyenv init -|psub)
 
 # export docker toolbox settings
 set -x DOCKER_TLS_VERIFY "1";
@@ -41,8 +44,8 @@ set -g -x GOPATH $HOME/gocode
 set -g -x LESS '-R'
 set -g -x LESSOPEN '|~/.lessfilter %s'
 
-# set PATH $GOPATH/bin $SCALA_ROOT/bin $CLOJURE_ROOT/bin $APP_PATH/bin $PATH
-set PATH $GOPATH/bin /usr/local/lib/node_modules/bin $PATH
+# add go path
+set PATH $GOPATH/bin $PATH
 
 # predefine certain aliases
 source $HOME/.config/fish/aliases.fish
@@ -53,10 +56,10 @@ source $HOME/.config/fish/git.fish
 source $HOME/.config/fish/rbenv.fish
 
 # load aws keys
-source $HOME/.config/fish/aws.fish
+# source $HOME/.config/fish/aws.fish
 
 # load some server connection definitions
-source $HOME/.config/fish/qservers.fish
+# source $HOME/.config/fish/qservers.fish
 
 source $HOME/.config/fish/fzf.fish
 
