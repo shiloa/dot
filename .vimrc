@@ -1,7 +1,7 @@
 " vim:set ts=2 sts=2 sw=2 expandtab:
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" I PREFER vim-plug FOR PLUGIN MANAGEMENT
+" I prefer 'vim-plug' for plugin management
 " (https://github.com/junegunn/vim-plug)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible
@@ -35,7 +35,6 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'honza/vim-snippets'
 Plug 'SirVer/ultisnips'
-" Plug 'garbas/vim-snipmate'
 Plug 'fatih/vim-go'
 Plug 'takac/vim-commandcaps'            " some commands should also work if you type caps, like :WQ
 Plug 'cespare/vim-toml'                 " toml markup syntax support
@@ -57,15 +56,11 @@ Plug 'elzr/vim-json'                    " Better JSON syntax highlight support f
 Plug 'tpope/vim-jdaddy'                 " JSON manipulation and pretty printing
 Plug 'altercation/vim-colors-solarized' " Solarized color theme
 
-" Elixir?... Why not.
-Plug 'elixir-lang/vim-elixir'
-
 " Experimental Clojure Stuff
 Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-clojure-static'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'kovisoft/paredit'
-" Plug 'venantius/vim-eastwood'
 
 au VimEnter * RainbowParentheses
 let g:rainbow#max_level = 16
@@ -73,50 +68,6 @@ let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}'], ['<', '>']]
 
 " List of colors that you do not want. ANSI code or #RRGGBB
 let g:rainbow#blacklist = [233, 234]
-
-" au Syntax * RainbowParenthesesLoadRound
-" au Syntax * RainbowParenthesesLoadSquare
-" au Syntax * RainbowParenthesesLoadBraces
-
-"**** Plugs that were once interesting, but
-"**** not anymore (maybe someday)
-
-" let Vundle manage Vundle
-"Plug 'gmarik/vundle'
-"Plug 'edsono/vim-matchit'
-"Plug 'RobbieClarken/vim-haproxy'
-"Plug 'Valloric/YouCompleteMe'
-"Plug 'editorconfig/editorconfig-vim'
-"Plug 'powerline/powerline'
-"Plug 'wting/rust.vim' " Rust
-"Plug 'tpope/vim-speeddating'
-"Plug 'tpope/vim-unimpaired'
-"Plug 'c9s/colorselector.vim'
-"Plug 'godlygeek/tabular'
-"Plug 'tpope/vim-haml'
-"Plug 'tpope/vim-pathogen'
-"Plug 'nono/vim-handlebars'
-"Plug 'Lokaltog/powerline'
-"Plug 'terryma/vim-multiple-cursors'
-"
-"Plug 'AndrewRadev/vim-eco'
-"Plug 'vim-scripts/Better-CSS-Syntax-for-Vim'
-"Plug 'ap/vim-css-color'
-"Plug 'troydm/easybuffer.vim'
-"Plug 'nono/vim-handlebars'
-"Plug 'juvenn/mustache.vim'
-"Plug 'motus/pig.vim'
-"Plug 'robgleeson/hammer.vim'
-"Plug 'sirver/ultisnips'
-"Plug 'derekwyatt/vim-scala'
-"Plug 'gre/play2vim'
-"Plug 'bdd/vim-scala'
-"Plug 'ervandew/screen'
-"Plug 'VimClojure'
-"Plug 'nathanaelkane/vim-indent-guides'
-"Plug 'elubow/cql-vim'
-"Plug 'ChrisKempson/Vim-Tomorrow-Theme'
-"Plug 'puppetlabs/puppet-syntax-vim'
 
 call plug#end()
 filetype plugin indent on " required!
@@ -224,9 +175,6 @@ augroup vimrcEx
   " puppet syntax highlight is just ruby
   autocmd BufRead,BufNewFile *.pp setf ruby
 
-  " Indent p tags
-  "autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
-
   " Don't syntax highlight markdown because it's often wrong
   autocmd! FileType mkd setlocal syn=off
 
@@ -246,14 +194,13 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set t_Co=256 " 256 colors
-syntax enable
 
-let g:solarized_termcolors=256
-"set background=light
+syntax on
 set background=dark
-"colorscheme molokai
+let g:solarized_termcolors=256
 colorscheme solarized
+
+"colorscheme molokai
 "colorscheme Tomorrow-Night
 "colorscheme grb256
 "colorscheme ir_black
@@ -273,6 +220,7 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
+
 " Insert a hash rocket with <c-l>
 imap <c-l> <space>=><space>
 " Can't be bothered to understand ESC vs <c-c> in insert mode
@@ -854,3 +802,8 @@ endfunction
 
 " Prettify JSON in current buffer/range
 command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool
+
+" Navigate buffers with Ctrl+TAB / Ctrl+Shift+TAB
+nnoremap <C-Tab> :bn<Cr> 
+nnoremap <C-S-Tab> :bp<Cr>
+

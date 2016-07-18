@@ -1,5 +1,5 @@
 # xterm
-set -g -x TERM xterm-256color
+# set -g -x TERM screen-256color
 
 # environment path
 set PATH "/usr/local/bin" $PATH
@@ -11,6 +11,8 @@ set -x LANG en_US.UTF-8
 # locale seems to be important
 set -x LC_ALL en_US.UTF-8
 set -x LANG en_US.UTF-8
+
+set -x -g JAVA_HOME (/usr/libexec/java_home)
 
 # load rbenv
 set PATH $HOME/.rbenv/bin $PATH
@@ -59,7 +61,7 @@ source $HOME/.config/fish/rbenv.fish
 # source $HOME/.config/fish/aws.fish
 
 # load some server connection definitions
-# source $HOME/.config/fish/qservers.fish
+source $HOME/.config/fish/credentials.fish
 
 source $HOME/.config/fish/fzf.fish
 
