@@ -55,6 +55,8 @@ Plug 'szw/vim-tags'                     " code tag support
 Plug 'elzr/vim-json'                    " Better JSON syntax highlight support for Vim
 Plug 'tpope/vim-jdaddy'                 " JSON manipulation and pretty printing
 Plug 'altercation/vim-colors-solarized' " Solarized color theme
+Plug 'ekalinin/Dockerfile.vim'          " Dockerfile syntax highlight
+Plug 'evanmiller/nginx-vim-syntax'      " nginx syntax
 
 " Experimental Clojure Stuff
 Plug 'tpope/vim-fireplace'
@@ -64,7 +66,7 @@ Plug 'kovisoft/paredit'
 
 au VimEnter * RainbowParentheses
 let g:rainbow#max_level = 16
-let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}'], ['<', '>']]
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 
 " List of colors that you do not want. ANSI code or #RRGGBB
 let g:rainbow#blacklist = [233, 234]
