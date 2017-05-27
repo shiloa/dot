@@ -1,5 +1,5 @@
 # xterm
-# set -g -x TERM screen-256color
+set -g -x TERM screen-256color
 
 # environment path
 set PATH "/usr/local/bin" $PATH
