@@ -8,10 +8,6 @@ set PATH "/usr/local/bin" $PATH
 set -x LC_ALL en_US.UTF-8
 set -x LANG en_US.UTF-8
 
-# locale seems to be important
-set -x LC_ALL en_US.UTF-8
-set -x LANG en_US.UTF-8
-
 # You should have java installed
 set -x -g JAVA_HOME (/usr/libexec/java_home)
 
@@ -30,24 +26,15 @@ set -x -g JAVA_HOME (/usr/libexec/java_home)
 # set PATH $PYENV_ROOT/bin $PATH
 # status --is-interactive; and . (pyenv init -|psub)
 
-# vim is the preferred editor (duh)
-set -g -x EDITOR vim
-
-# misc apps/frameworks/languages configuration (OPTIONAL, requires 'brew install go')
-# set -g -x GOPATH $HOME/gocode
-# set PATH $GOPATH/bin $PATH
-
-# less coloring configuration
-set -g -x LESS '-R'
-set -g -x LESSOPEN '|~/.lessfilter %s'
+# vim is preferred editor
+# set -g -x EDITOR vim
 
 # predefine certain aliases (if you wish)
-source $HOME/.config/fish/aliases.fish
+# source $HOME/.config/fish/aliases.fish
 
-# load VCS stuff
+# VCS stuff
 source $HOME/.config/fish/git.fish
 # source $HOME/.config/fish/hg.fish
-
 
 # load aws keys
 # source $HOME/.config/fish/aws.fish
@@ -57,7 +44,6 @@ source $HOME/.config/fish/git.fish
 
 # fzf (fuzzy find anything) support (OPTIONAL, 'brew install fzf')
 # source $HOME/.config/fish/fzf.fish
-
 
 function current_time
     printf '%s' (date +%H:%M)

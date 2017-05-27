@@ -19,7 +19,8 @@ Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'tsaleh/vim-align'
+" Plug 'tsaleh/vim-align'
+Plug 'junegunn/vim-easy-align'
 Plug 'vim-scripts/bufexplorer.zip'
 Plug 'vim-scripts/closetag.vim'
 Plug 'godlygeek/csapprox'
@@ -34,7 +35,7 @@ Plug 'kchmck/vim-coffee-script'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'honza/vim-snippets'
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 Plug 'fatih/vim-go'
 Plug 'takac/vim-commandcaps'            " some commands should also work if you type caps, like :WQ
 Plug 'cespare/vim-toml'                 " toml markup syntax support
@@ -63,6 +64,7 @@ Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-clojure-static'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'kovisoft/paredit'
+Plug 'zimbatm/haproxy.vim'
 
 au VimEnter * RainbowParentheses
 let g:rainbow#max_level = 16
@@ -410,10 +412,18 @@ let g:NERDCustomDelimiters = {
       \ }
 
 " make sure UltiSnips uses Python 2
-let g:UltiSnipsUsePythonVersion = 2
+" let g:UltiSnipsUsePythonVersion = 2
 
 " disable visual mode (because I HATE IT)
 map Q <c-V>
+
+" map alignment keys
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ARROW KEYS ARE UNACCEPTABLE
