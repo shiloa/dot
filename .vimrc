@@ -15,8 +15,6 @@ Plug 'ervandew/supertab'
 Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-rails'
-Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 " Plug 'tsaleh/vim-align'
@@ -27,15 +25,18 @@ Plug 'godlygeek/csapprox'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/syntastic'
+Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/nerdtree'
 Plug 'mrtazz/molokai.vim'
-Plug 'morhetz/gruvbox'
 Plug 'sickill/vim-monokai'
-Plug 'kchmck/vim-coffee-script'
+Plug 'morhetz/gruvbox'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
-Plug 'honza/vim-snippets'
-" Plug 'SirVer/ultisnips'
+
+" Plug 'Shougo/neocomplete'
+" Plug 'Shougo/neosnippet'
+" Plug 'Shougo/neosnippet-snippets'
+
 Plug 'fatih/vim-go'
 Plug 'takac/vim-commandcaps'            " some commands should also work if you type caps, like :WQ
 Plug 'cespare/vim-toml'                 " toml markup syntax support
@@ -44,9 +45,10 @@ Plug 'rking/ag.vim'                     " wrapper around silver searcher for fin
 Plug 'bling/vim-airline'                " pretty vim status line
 Plug 'vim-airline/vim-airline-themes'   " airline themes
 Plug 'tpope/vim-fugitive'               " git in vim
+Plug 'tpope/vim-rhubarb'                " the 'hub' in github
 Plug 'ctrlpvim/ctrlp.vim'               " quick open file/tag
 Plug 'Glench/Vim-Jinja2-Syntax'         " jinja2 templates
-Plug 'mxw/vim-jsx'                      " JSX syntax support
+" Plug 'mxw/vim-jsx'                      " JSX syntax support
 Plug 'vim-scripts/diffchar.vim'         " better diff'ing using vimdiff
 Plug 'mbbill/undotree'
 Plug 'klen/python-mode'                 " python support
@@ -57,11 +59,7 @@ Plug 'elzr/vim-json'                    " Better JSON syntax highlight support f
 Plug 'tpope/vim-jdaddy'                 " JSON manipulation and pretty printing
 Plug 'altercation/vim-colors-solarized' " Solarized color theme
 Plug 'ekalinin/Dockerfile.vim'          " Dockerfile syntax highlight
-Plug 'evanmiller/nginx-vim-syntax'      " nginx syntax
 
-" Experimental Clojure Stuff
-Plug 'tpope/vim-fireplace'
-Plug 'guns/vim-clojure-static'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'kovisoft/paredit'
 Plug 'zimbatm/haproxy.vim'
