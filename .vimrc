@@ -198,11 +198,11 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax on
-set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
+" set background=dark
+" let g:solarized_termcolors=256
+" colorscheme solarized
 
-"colorscheme molokai
+colorscheme monokai
 "colorscheme Tomorrow-Night
 "colorscheme grb256
 "colorscheme ir_black
@@ -217,6 +217,7 @@ colorscheme solarized
 " MISC KEY MAPS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <leader>y "*y
+
 " Move around splits with <c-hjkl>
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
