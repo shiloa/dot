@@ -8,42 +8,74 @@ set PATH "/usr/local/bin" $PATH
 set -x LC_ALL en_US.UTF-8
 set -x LANG en_US.UTF-8
 
-# You should have java installed
+# having JAVA_HOME is nice
 set -x -g JAVA_HOME (/usr/libexec/java_home)
 
-# load rbenv (OPTIONAL, requires 'brew install rbenv')
-# set PATH $HOME/.rbenv/bin $PATH
-# set PATH $HOME/.rbenv/shims $PATH
-# rbenv rehash >/dev/null ^&1
-# source $HOME/.config/fish/rbenv.fish
+#########################
+# Language Environments
+#########################
 
-# node JS path (OPTIONAL, requires 'brew install node')
+# load rbenv
+source $HOME/.config/fish/rbenv.fish
+set PATH $HOME/.rbenv/shims $PATH
+rbenv rehash >/dev/null ^&1
+
+# load pyenv
+set -g -x PYENV_ROOT $HOME/.pyenv
+set PATH $PYENV_ROOT/shims $PATH
+status --is-interactive; and . (pyenv init - | psub)
+
+# load nodenv
+status --is-interactive; and source (nodenv init -|psub)
+
+# node JS path
 # node/npm setup
-# set NODE_PATH $HOME/node_modules /usr/local/lib/node_modules
+set NODE_PATH $HOME/node_modules /usr/local/lib/node_modules
 
-# load pyenv (OPTIONAL, requires 'brew install pyenv')
-# set -g -x PYENV_ROOT $HOME/.pyenv
-# set PATH $PYENV_ROOT/bin $PATH
-# status --is-interactive; and . (pyenv init -|psub)
+#########################
+# Global Vars
+#########################
 
-# vim is preferred editor
-# set -g -x EDITOR vim
+# Kubernetes config
+# set -xg KUBECONFIG $HOME/admin.conf
+# set -xg KOPS_STATE_STORE "s3://[PATH]"
 
-# predefine certain aliases (if you wish)
-# source $HOME/.config/fish/aliases.fish
+# ansible environment setup
+# set -x -g ANSIBLE_VAULT_PASSWORD_FILE $HOME/.ansible/password.txt
+# set -x -g ANSIBLE_PRIVATE_KEY_FILE $HOME/.ssh/oribiappio.pem
 
-# VCS stuff
+# AWS credentials
+# set -xg AWS_ACCESS_KEY_ID [AWS_ACCESS_KEY_ID]
+# set -xg AWS_SECRET_ACCESS_KEY [AWS_SECRET_ACCESS_KEY]
+
+# vim is the preferred editor
+set -g -x EDITOR vim
+
+# set -g -x APP_ENV dev
+
+# misc apps/frameworks/languages configuration
+set -g -x GOPATH $HOME/gocode
+
+# less coloring configuration
+set -g -x LESS '-R'
+# set -g -x LESSOPEN '|~/.lessfilter %s'
+
+# add go path
+set PATH $GOPATH/bin $PATH
+
+# predefine certain aliases
+source $HOME/.config/fish/aliases.fish
+
+# load VCS stuff
 source $HOME/.config/fish/git.fish
-# source $HOME/.config/fish/hg.fish
 
 # load aws keys
 # source $HOME/.config/fish/aws.fish
 
-# load some server connection definitions (OPTIONAL)
-# source $HOME/.config/fish/credentials.fish
+# load some environment variables
+source $HOME/.config/fish/vars.fish
 
-# fzf (fuzzy find anything) support (OPTIONAL, 'brew install fzf')
-# source $HOME/.config/fish/fzf.fish
+source $HOME/.config/fish/fzf.fish
 
 function current_time
     printf '%s' (date +%H:%M)
@@ -57,8 +89,13 @@ function fish_prompt
     printf '%s' (prompt_pwd)
     set_color normal
 
-    hg_prompt
+    # hg_prompt
     git_prompt
 
     echo ' $ '
 end
+
+# oribi devenv setting
+# launchctl setenv DEVENV_HOST 10.200.10.1
+# set -xg DEVENV_HOST 10.200.10.1
+
