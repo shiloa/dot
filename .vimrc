@@ -33,9 +33,16 @@ Plug 'morhetz/gruvbox'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 
-" Plug 'Shougo/neocomplete'
-" Plug 'Shougo/neosnippet'
-" Plug 'Shougo/neosnippet-snippets'
+"""" Experimental
+" Use release branch
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" " Or latest tag
+" Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
+" Or build from source code by use yarn: https://yarnpkg.com
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+"""" /Experimental
+
+Plug 'jceb/vim-orgmode'
 
 Plug 'fatih/vim-go'
 Plug 'takac/vim-commandcaps'            " some commands should also work if you type caps, like :WQ
@@ -187,11 +194,11 @@ augroup vimrcEx
 augroup END
 
 " Save undo history
-if has('persistent_undo')
+" if has('persistent_undo')
     set undolevels=5000
     set undodir=$HOME/.vim-undo-files
     set undofile
-endif
+" endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
