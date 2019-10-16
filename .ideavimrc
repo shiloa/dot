@@ -1,12 +1,11 @@
+" map , (find previous match on t/T/f/F) to /
+nnoremap \ ,
+
+" map leader to commaa
+let mapleader=","
+
 " Surround plugin
 set surround
-
-" highlight all matching search results, dismiss with RETURN
-set hlsearch
-function! MapCR()
-  nnoremap <cr> :nohlsearch<cr>
-endfunction
-call MapCR()
 
 " duplicate current row
 nnoremap <C-d> Vyp
@@ -31,3 +30,10 @@ vnoremap <C-d> y<Esc>o<Esc>p
 
 " hitting jk while in insert mode will change back to normal
 inoremap jk <Esc>
+
+" highlight all matching search results, dismiss with RETURN
+set hlsearch
+function! MapCR()
+  nnoremap <cr> :nohlsearch<cr>
+endfunction
+call MapCR()
