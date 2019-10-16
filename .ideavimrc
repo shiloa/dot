@@ -1,6 +1,13 @@
 " Surround plugin
 set surround
 
+" highlight all matching search results, dismiss with RETURN
+set hlsearch
+function! MapCR()
+  nnoremap <cr> :nohlsearch<cr>
+endfunction
+call MapCR()
+
 " duplicate current row
 nnoremap <C-d> Vyp
 inoremap <C-d> <Esc>Vyp<Esc>i
