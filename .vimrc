@@ -14,62 +14,55 @@ Plug 'Raimondi/delimitMate'
 Plug 'ervandew/supertab'
 Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-" Plug 'tsaleh/vim-align'
 Plug 'junegunn/vim-easy-align'
 Plug 'vim-scripts/bufexplorer.zip'
 Plug 'vim-scripts/closetag.vim'
-Plug 'godlygeek/csapprox'
-Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/syntastic'
 Plug 'sheerun/vim-polyglot'
-Plug 'scrooloose/nerdtree'
 Plug 'mrtazz/molokai.vim'
 Plug 'sickill/vim-monokai'
-Plug 'morhetz/gruvbox'
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-
-"""" Experimental
-" Use release branch
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" " Or latest tag
-" Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
-" Or build from source code by use yarn: https://yarnpkg.com
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-"""" /Experimental
-
-Plug 'jceb/vim-orgmode'
-
-Plug 'fatih/vim-go'
 Plug 'takac/vim-commandcaps'            " some commands should also work if you type caps, like :WQ
-Plug 'cespare/vim-toml'                 " toml markup syntax support
 Plug 'pangloss/vim-javascript'          " better js syntax support
 Plug 'rking/ag.vim'                     " wrapper around silver searcher for finding strings in files
 Plug 'bling/vim-airline'                " pretty vim status line
 Plug 'vim-airline/vim-airline-themes'   " airline themes
 Plug 'tpope/vim-fugitive'               " git in vim
-Plug 'tpope/vim-rhubarb'                " the 'hub' in github
-Plug 'ctrlpvim/ctrlp.vim'               " quick open file/tag
+Plug 'kien/ctrlp.vim'               " quick open file/tag
 Plug 'Glench/Vim-Jinja2-Syntax'         " jinja2 templates
-" Plug 'mxw/vim-jsx'                      " JSX syntax support
 Plug 'vim-scripts/diffchar.vim'         " better diff'ing using vimdiff
-Plug 'mbbill/undotree'
 Plug 'klen/python-mode'                 " python support
-Plug 'sophacles/vim-bundle-mako'        " mako template engine
 Plug 'vim-scripts/tComment'             " comments
-Plug 'szw/vim-tags'                     " code tag support
 Plug 'elzr/vim-json'                    " Better JSON syntax highlight support for Vim
 Plug 'tpope/vim-jdaddy'                 " JSON manipulation and pretty printing
 Plug 'altercation/vim-colors-solarized' " Solarized color theme
-Plug 'ekalinin/Dockerfile.vim'          " Dockerfile syntax highlight
 
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'kovisoft/paredit'
-Plug 'zimbatm/haproxy.vim'
+Plug 'tomtom/tlib_vim'
+" Plug 'tpope/vim-endwise'
+" Plug 'tsaleh/vim-align'
+" Plug 'morhetz/gruvbox'
+" Plug 'MarcWeber/vim-addon-mw-utils'
+" Plug 'godlygeek/csapprox'
+" Plug 'majutsushi/tagbar'
+" Plug 'scrooloose/nerdtree'
+
+"""" Experimental"
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " auto completion
+Plug 'endel/vim-github-colorscheme'             " github color scheme
+
+" Developing in typescript
+Plug 'Quramy/tsuquyomi' " Typescript language server
+autocmd FileType typescript setlocal formatprg=prettier\ --parser\ typescript
+
+" typescript support
+
+"""" /Experimental
+
 
 au VimEnter * RainbowParentheses
 let g:rainbow#max_level = 16
@@ -78,12 +71,20 @@ let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 " List of colors that you do not want. ANSI code or #RRGGBB
 let g:rainbow#blacklist = [233, 234]
 
+""""""""
+" tests
+Plug 'ayu-theme/ayu-vim' " or other package manager
+Plug 'sonph/onehalf'
+""""""""
+
 call plug#end()
 filetype plugin indent on " required!
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " BASIC EDITING CONFIGURATION
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable highlighting for syntax
+syntax on
 " allow unsaved background buffers and remember marks/undo for them
 set hidden
 set visualbell t_vb= " avoid visual bell on errors
@@ -124,8 +125,6 @@ set scrolloff=3
 set backspace=indent,eol,start
 " display incomplete commands
 set showcmd
-" Enable highlighting for syntax
-syntax on
 " Enable file type detection.
 " Use the default filetype settings, so that mail gets 'tw' set to 72,
 " 'cindent' is on in C files, etc.
@@ -160,7 +159,7 @@ augroup vimrcEx
     \ endif
 
   "for some files, autoindent with two spaces, always expand tabs
-  autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber,sass,scss,less set ai sw=2 sts=2 et
+  autocmd FileType ruby,haml,eruby,yaml,html,typescript,javascript,sass,cucumber,sass,scss,less set ai sw=2 sts=2 et
   autocmd FileType python set sw=4 sts=4 et
 
   " associate tpl file extension with jinja html syntax highlight
@@ -181,9 +180,6 @@ augroup vimrcEx
   " upstart file syntax highlight
   autocmd BufRead,BufNewFile *.upstart setf upstart
 
-  " puppet syntax highlight is just ruby
-  autocmd BufRead,BufNewFile *.pp setf ruby
-
   " Don't syntax highlight markdown because it's often wrong
   autocmd! FileType mkd setlocal syn=off
 
@@ -203,16 +199,27 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-syntax on
-" set background=dark
+set termguicolors     " enable true colors support
+syntax enable
+" set background=light
 " let g:solarized_termcolors=256
 " colorscheme solarized
+" colorscheme github
 
-colorscheme monokai
+" colorscheme monokai
 "colorscheme Tomorrow-Night
 "colorscheme grb256
 "colorscheme ir_black
+
+
+"...
+let ayucolor="light"  " for light version of theme
+" let ayucolor="mirage" " for mirage version of theme
+" let ayucolor="dark"   " for dark version of theme
+colorscheme ayu
+
+" colorscheme onehalflight
+" let g:airline_theme='onehalfdark'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -345,10 +352,23 @@ endif
 map <leader>a *:AgFromSearch<cr>
 
 " toggle NERDTree in the current project
-map <leader>b :NERDTreeToggle<cr>
+" map <leader>b :NERDTreeToggle<cr>
+" map <leader>1 :NERDTreeToggle<cr>
+
 
 " make sure NERDTree uses wildignore
-let NERDTreeRespectWildIgnore = 1
+" let NERDTreeRespectWildIgnore = 1
+
+" Replace NERDTree with netrw
+" let g:netrw_banner = 0
+" let g:netrw_liststyle = 3
+" let g:netrw_browse_split = 4
+" let g:netrw_altv = 1
+" let g:netrw_winsize = 25
+" augroup ProjectDrawer
+"   autocmd!
+"   autocmd VimEnter * :Vexplore
+" augroup END
 
 " EasyBuffer bufname format
 "let g:easybuffer_bufname = "expand('#'.bnr.':t')"
@@ -610,6 +630,7 @@ nnoremap <leader>. :call OpenTestAlternate()<cr>
 map <leader>t :call RunPytestOnCurrentFile()<cr>
 map <leader>T :call RunNearestPytest()<cr>
 map <leader>d :call AddPDBSetTrace()<cr>
+map <leader>j :call RunNearestJest()<cr>
 "map <leader>c :w\|:!cucumber --drb %<cr>
 "map <leader>c :w\|:!script/features<cr>
 "map <leader>w :w\|:!script/features --profile wip<cr>
@@ -684,6 +705,47 @@ function! RunNearestPytest()
   exec ":" . current_line_num
 
   exec ":!py.test --verbose --random -vv " . test_path
+endfunction
+
+" find the nearest it() test or describe() block and run it.
+" If not found run the file name
+function! RunNearestJest() 
+  " save the location of the current line
+  let current_line_num = line('.')
+
+  " get the name of the current test file
+  let test_path = expand('%:')
+
+  let func_name = 0
+
+  " go to nearset test function
+  if search('it(', 'bW') != 0
+    " get the current function name
+    let func_name = split(substitute(getline('.'), 'def ', '', ''), '(')[0]
+    let func_name = substitute(func_name, ' ', '', 'g')
+  endif
+
+  if search('describe(', 'bW') != 0
+    let class_name = substitute(getline('.'), 'class ', '', '')
+    " remove any trailing : or ( )
+    let class_name = split(class_name, '(')[0]
+    let class_name = substitute(class_name, ')', '', 'g')
+    let class_name = substitute(class_name, ':', '', 'g')
+
+    if class_name != ''
+      let test_path = test_path . '::' . class_name
+    endif
+  endif
+
+  " format the pytest path to run
+  if func_name !~ 0
+    let test_path = test_path . '::' . func_name
+  endif
+
+  " go back to the original line number
+  exec ":" . current_line_num
+
+  exec ":!./node_modules/.bin/jest --passWithNoTests " . test_path
 endfunction
 
 " Remove 'import ipdb' at top of file if exists
@@ -824,4 +886,3 @@ command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool
 " Navigate buffers with Ctrl+TAB / Ctrl+Shift+TAB
 nnoremap <C-Tab> :bn<Cr> 
 nnoremap <C-S-Tab> :bp<Cr>
-
