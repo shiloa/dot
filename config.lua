@@ -32,6 +32,9 @@ lvim.keys.normal_mode["<leader>z"] = ":Telescope buffers<cr>"
 -- duplicate current row
 lvim.keys.normal_mode["<C-d>"] = "Vyp"
 
+-- map jk to escape
+lvim.keys.insert_mode["jk"] = "<Esc>"
+
 -- move current row one down (in all modes)
 lvim.keys.normal_mode["<C-j>"] = ":m+<CR>=="
 lvim.keys.insert_mode["<C-j>"] = "<Esc>:m+<CR>==gi"
