@@ -2,6 +2,9 @@
  THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
  `lvim` is the global options object
 ]]
+--
+-- Font: DruidSansMono Nerd Font / Regular/ 18: https://www.nerdfonts.com/font-downloads
+--
 -- vim options
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
