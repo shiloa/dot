@@ -49,16 +49,22 @@ lvim.keys.insert_mode["<C-k>"] = "<Esc>:m-2<CR>==gi"
 lvim.keys.visual_mode["<C-k>"] = ":m-2<CR>gv=gv"
 
 
--- function! RenameFile()
---     let old_name = expand('%')
---     let new_name = input('New file name: ', expand('%'), 'file')
---     if new_name != '' && new_name != old_name
---         exec ':saveas ' . new_name
---         exec ':silent !rm ' . old_name
---         redraw!
---     endif
--- endfunction
--- map <leader>n :call RenameFile()<cr>
+function RenameCurrentFile()
+  local old_name = vim.fn.expand('%')
+  local new_name = vim.fn.input('New name: ' .. old_name)
+  if new_name ~= '' and new_name ~= old_name then
+    local result = os.rename(old_name, new_name)
+    if result == nil then
+      vim.api.nvim_err_writeln('Error renaming file')
+    else
+      vim.api.nvim_command('e ' .. new_name)
+      vim.api.nvim_command('delete ' .. old_name)
+      vim.api.nvim_out_write('Renamed file from ' .. old_name .. ' to ' .. new_name .. '\n')
+    end
+  end
+end
+
+lvim.keys.normal_mode["<leader>n"] = ":lua RenameCurrentFile()<CR>"
 
 -- lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 -- lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
