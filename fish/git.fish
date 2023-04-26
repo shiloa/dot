@@ -1,9 +1,9 @@
-function git_branch
+function _branch
     git branch 2> /dev/null | grep -e '\* ' | sed 's/^..\(.*\)/\1/'
 end
 
 function git_prompt
-    set -l toplevel (command git rev-parse --git-dir ^/dev/null)
+    set -l toplevel (command git rev-parse --show-toplevel)
 
     if test -n "$toplevel"
         set_color normal
@@ -36,4 +36,3 @@ function git_prompt
         printf ']'
     end
 end
-
