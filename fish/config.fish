@@ -19,10 +19,6 @@ set -xg ANDROID_SDK_ROOT $HOME/Library/Android/sdk
 # Make sure directory colors are readable in ls
 set -Ux LSCOLORS gxfxbEaEBxxEhEhBaDaCaD
 
-# AWS credentials
-# set -xg AWS_ACCESS_KEY_ID AKIAI3NZZDSLWDTPFDEQ
-# set -xg AWS_SECRET_ACCESS_KEY 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
-
 #########################
 # Language Environments
 #########################
