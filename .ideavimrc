@@ -11,6 +11,10 @@ set surround
 nnoremap <C-d> Vyp
 inoremap <C-d> <Esc>Vyp<Esc>i
 
+" no annoying bell sound
+set visualbell
+set noerrorbells
+
 " key mapping to move line/selected lines using Ctrl-up/down 
 nnoremap <C-Down> :m+<CR>==
 nnoremap <C-Up> :m-2<CR>==
