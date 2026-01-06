@@ -1,0 +1,12 @@
+# Bind arrow keys to history search (fuzzy match prefix)
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# Make Tab autocomplete regardless of filename case
+set completion-ignore-case on
+
+# Show all autocomplete results at once
+set show-all-if-ambiguous on
+
+# Color files by type in autocomplete
+set colored-stats on

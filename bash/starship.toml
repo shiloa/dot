@@ -1,0 +1,42 @@
+# Starship Configuration
+# "Simple & Elegant"
+
+add_newline = true
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+style = "bold cyan"
+
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+[git_status]
+style = "bold red"
+conflicted = "🏳"
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+up_to_date = "✓"
+untracked = "?"
+stashed = "📦"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+[cmd_duration]
+min_time = 2000
+format = "[$duration]($style) "
+style = "yellow"
+
+[time]
+disabled = false
+format = "[$time]($style) "
+time_format = "%H:%M"
+style = "bold black bright"
