@@ -84,9 +84,17 @@ if command -v direnv >/dev/null; then
   eval "$(direnv hook bash)"
 fi
 
+# Zoxide (Better z command)
+if command -v zoxide >/dev/null; then
+  eval "$(zoxide init bash)"
+fi
+
 # --- 5. ALIASES ---
 
 # Basics
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
 alias ls='ls -G' # Colorized ls on macOS
 alias ll='ls -alF'
 alias la='ls -A'

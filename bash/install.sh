@@ -11,7 +11,7 @@ fi
 
 # 2. Install Core Tools
 echo "📦 Installing tools via Homebrew..."
-brew install starship fzf bash-completion@2 gawk direnv pyenv nodenv
+brew install starship fzf bash-completion@2 gawk direnv pyenv nodenv zoxide
 
 # 3. Install ble.sh (The Magic)
 if [ ! -f "$HOME/.local/share/blesh/ble.sh" ]; then

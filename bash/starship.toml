@@ -1,15 +1,19 @@
 # Starship Configuration
-# "Simple & Elegant"
+# "Clean & Minimal"
 
 add_newline = true
+
+# STRICT FORMAT: Only show Directory -> Git -> Prompt. 
+# This disables all language detection (Java, Node, etc) and timers.
+format = "$directory$git_branch$git_status$line_break$character"
 
 [character]
 success_symbol = "[➜](bold green)"
 error_symbol = "[➜](bold red)"
 
 [directory]
-truncation_length = 3
-truncation_symbol = "…/"
+truncation_length = 0    # 0 = Never truncate (Show full path)
+truncate_to_repo = false # False = Show full path even inside git repos
 style = "bold cyan"
 
 [git_branch]
@@ -22,21 +26,10 @@ conflicted = "🏳"
 ahead = "⇡"
 behind = "⇣"
 diverged = "⇕"
-up_to_date = "✓"
+up_to_date = ""          # Empty = show nothing when clean (Silent)
 untracked = "?"
 stashed = "📦"
 modified = "!"
 staged = "+"
 renamed = "»"
 deleted = "✘"
-
-[cmd_duration]
-min_time = 2000
-format = "[$duration]($style) "
-style = "yellow"
-
-[time]
-disabled = false
-format = "[$time]($style) "
-time_format = "%H:%M"
-style = "bold black bright"
