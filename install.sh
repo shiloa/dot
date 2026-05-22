@@ -72,6 +72,11 @@ cp .vimrc ~/.vimrc
 cp .pylintrc ~/.pylincrc
 cp .tmux.conf ~/.tmux.conf
 
+# copy tmux agent helper script
+mkdir -p ~/bin
+cp tmux-agent-helper.py ~/bin/tmux-agent-helper.py
+chmod +x ~/bin/tmux-agent-helper.py
+
 # copy fish files
 mkdir -p ~/.config/fish
 cp fish/*.fish ~/.config/fish
