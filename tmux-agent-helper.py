@@ -16,24 +16,37 @@ def run_cmd(cmd):
         return ""
 
 def get_tmux_panes():
-    # Format: session_name \t window_index \t window_name \t pane_index \t pane_tty \t pane_current_path
-    fmt = '#{session_name}\t#{window_index}\t#{window_name}\t#{pane_index}\t#{pane_tty}\t#{pane_current_path}'
+    # Format: session_name \t window_index \t window_name \t pane_index \t pane_id \t pane_tty \t pane_current_path \t pane_title
+    fmt = '#{session_name}\t#{window_index}\t#{window_name}\t#{pane_index}\t#{pane_id}\t#{pane_tty}\t#{pane_current_path}\t#{pane_title}'
     out = run_cmd(f"tmux list-panes -a -F '{fmt}'")
     panes = []
     for line in out.splitlines():
         if not line:
             continue
         parts = line.split('\t')
-        if len(parts) >= 6:
+        if len(parts) >= 8:
             panes.append({
                 "session_name": parts[0],
                 "window_index": parts[1],
                 "window_name": parts[2],
                 "pane_index": parts[3],
-                "tty": parts[4],
-                "cwd": parts[5]
+                "pane_id": parts[4],
+                "tty": parts[5],
+                "cwd": parts[6],
+                "pane_title": parts[7]
             })
     return panes
+
+def get_pane_title(pane_id):
+    out = run_cmd(f"tmux show-options -p -t '{pane_id}' @pane_title")
+    # Output matches: @pane_title "value" or @pane_title value
+    match = re.match(r'@pane_title\s+"(.*)"', out)
+    if match:
+        return match.group(1)
+    match = re.match(r'@pane_title\s+(.*)', out)
+    if match:
+        return match.group(1)
+    return None
 
 def get_pane_process(tty):
     tty_short = tty.replace("/dev/", "")
@@ -154,36 +167,52 @@ def get_resume_info(pid, command_str):
     return None
 
 def do_save():
-    print("Scanning tmux panes for active agent sessions...")
+    print("Scanning tmux panes for active agent sessions, window names, and pane titles...")
     panes = get_tmux_panes()
-    agent_sessions = []
+    pane_states = []
     
     for pane in panes:
+        custom_pane_title = get_pane_title(pane["pane_id"])
+        
         proc = get_pane_process(pane["tty"])
+        info = None
         if proc:
             pid = proc["pid"]
             full_cmd = get_full_command(pid)
             if not full_cmd:
                 full_cmd = proc["command"]
-                
             info = get_resume_info(pid, full_cmd)
-            if info:
-                session_entry = {
-                    "session_name": pane["session_name"],
-                    "window_index": pane["window_index"],
-                    "window_name": pane["window_name"],
-                    "pane_index": pane["pane_index"],
-                    "cwd": pane["cwd"],
-                    "agent_type": info["agent_type"],
-                    "session_id": info.get("session_id"),
-                    "resume_command": info["resume_command"]
-                }
-                agent_sessions.append(session_entry)
-                print(f"Found active {info['agent_type']} agent in pane {pane['session_name']}:{pane['window_name']}.{pane['pane_index']} (CWD: {pane['cwd']}) -> resume command: {info['resume_command']}")
+            
+        # Save state for ALL panes
+        session_entry = {
+            "session_name": pane["session_name"],
+            "window_index": pane["window_index"],
+            "window_name": pane["window_name"],
+            "pane_index": pane["pane_index"],
+            "pane_id": pane["pane_id"],
+            "cwd": pane["cwd"],
+            "pane_title": pane["pane_title"],
+            "custom_pane_title": custom_pane_title,
+            "agent_type": info["agent_type"] if info else None,
+            "session_id": info.get("session_id") if info else None,
+            "resume_command": info["resume_command"] if info else None
+        }
+        pane_states.append(session_entry)
+        
+        log_parts = []
+        log_parts.append(f"window: '{pane['window_name']}'")
+        if pane["pane_title"]:
+            log_parts.append(f"title: '{pane['pane_title']}'")
+        if custom_pane_title:
+            log_parts.append(f"custom_title: '{custom_pane_title}'")
+        if info:
+            log_parts.append(f"agent: {info['agent_type']} ('{info['resume_command']}')")
+            
+        print(f"Saved state for pane {pane['session_name']}:{pane['window_name']}.{pane['pane_index']} -> {', '.join(log_parts)}")
                 
     with open(STATE_FILE, 'w') as f:
-        json.dump(agent_sessions, f, indent=2)
-    print(f"Saved {len(agent_sessions)} agent sessions to {STATE_FILE}")
+        json.dump(pane_states, f, indent=2)
+    print(f"Saved {len(pane_states)} pane states to {STATE_FILE}")
 
 def do_restore():
     if not os.path.exists(STATE_FILE):
@@ -194,10 +223,10 @@ def do_restore():
         sessions = json.load(f)
         
     if not sessions:
-        print("No agent sessions to restore.")
+        print("No pane states to restore.")
         return
         
-    print(f"Restoring {len(sessions)} agent sessions in 2 seconds...")
+    print(f"Restoring {len(sessions)} pane states in 2 seconds...")
     time.sleep(2)  # Wait for tmux and shells to fully initialize
     
     for s in sessions:
@@ -214,19 +243,39 @@ def do_restore():
                 print(f"Pane {target} not found. Skipping.")
                 continue
                 
-        # Optional check: make sure the pane is not already running a command
-        # This prevents sending keys to a pane that is actively executing something
-        tty_out = run_cmd(f"tmux display-message -t '{target}' -p '#{{pane_tty}}' 2>/dev/null")
-        if tty_out:
-            active_proc = get_pane_process(tty_out)
-            if active_proc:
-                print(f"Pane {target} is busy running process {active_proc['command']}. Skipping command injection to avoid interference.")
-                continue
-                
-        resume_cmd = s["resume_command"]
-        print(f"Restoring {s['agent_type']} in pane {target} -> {resume_cmd}")
-        # C-u clears standard shells line, then we run the command
-        run_cmd(f"tmux send-keys -t '{target}' C-u '{resume_cmd}' C-m")
+        # 1. Restore Window Name
+        if s.get("window_name"):
+            window_target = f"{s['session_name']}:{s['window_index']}"
+            print(f"Restoring window name for {window_target} -> '{s['window_name']}'")
+            window_name_escaped = s["window_name"].replace("'", "'\\''")
+            run_cmd(f"tmux rename-window -t '{window_target}' '{window_name_escaped}'")
+
+        # 2. Restore Standard Pane Title
+        if s.get("pane_title"):
+            print(f"Restoring standard title to {target} -> '{s['pane_title']}'")
+            title_escaped = s["pane_title"].replace("'", "'\\''")
+            run_cmd(f"tmux select-pane -t '{target}' -T '{title_escaped}'")
+
+        # 3. Restore Custom Pane Title
+        if s.get("custom_pane_title"):
+            print(f"Restoring custom @pane_title to {target} -> '{s['custom_pane_title']}'")
+            custom_title_escaped = s["custom_pane_title"].replace("'", "'\\''")
+            run_cmd(f"tmux set-option -p -t '{target}' @pane_title '{custom_title_escaped}'")
+            
+        # 4. Restore Agent CLI Session
+        if s.get("agent_type") and s.get("resume_command"):
+            # Optional check: make sure the pane is not already running a command
+            tty_out = run_cmd(f"tmux display-message -t '{target}' -p '#{{pane_tty}}' 2>/dev/null")
+            if tty_out:
+                active_proc = get_pane_process(tty_out)
+                if active_proc:
+                    print(f"Pane {target} is busy running process {active_proc['command']}. Skipping command injection.")
+                    continue
+                    
+            resume_cmd = s["resume_command"]
+            print(f"Restoring agent {s['agent_type']} in pane {target} -> {resume_cmd}")
+            # C-u clears standard shells line, then we run the command
+            run_cmd(f"tmux send-keys -t '{target}' C-u '{resume_cmd}' C-m")
 
 def main():
     if len(sys.argv) < 2:
