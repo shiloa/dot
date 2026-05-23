@@ -8,9 +8,9 @@ import time
 
 STATE_FILE = os.path.expanduser("~/.tmux-agent-sessions.json")
 
-def run_cmd(cmd):
+def run_cmd(cmd, timeout=3):
     try:
-        res = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        res = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=timeout)
         return res.stdout.strip()
     except Exception as e:
         return ""
@@ -48,13 +48,13 @@ def get_pane_title(pane_id):
         return match.group(1)
     return None
 
-def get_pane_process(tty):
+def get_pane_processes(tty):
     tty_short = tty.replace("/dev/", "")
     out = run_cmd(f"ps -o pid,ppid,command -t {tty_short}")
     processes = []
     lines = out.splitlines()
     if len(lines) <= 1:
-        return None
+        return []
     
     for line in lines[1:]:
         line = line.strip()
@@ -76,8 +76,12 @@ def get_pane_process(tty):
         if not ignored_patterns.match(cmd_base):
             active_procs.append(p)
             
-    if active_procs:
-        return active_procs[-1]
+    return active_procs
+
+def get_pane_process(tty):
+    procs = get_pane_processes(tty)
+    if procs:
+        return procs[-1]
     return None
 
 def get_full_command(pid):
@@ -87,7 +91,47 @@ def get_full_command(pid):
         return lines[1].strip()
     return ""
 
-def get_resume_info(pid, command_str):
+def find_copilot_session(pane_cwd):
+    session_state_dir = os.path.expanduser("~/.copilot/session-state")
+    if not os.path.exists(session_state_dir):
+        return None
+        
+    try:
+        target_cwd = os.path.realpath(pane_cwd)
+    except Exception:
+        target_cwd = pane_cwd
+        
+    matching_sessions = []
+    
+    try:
+        for sid in os.listdir(session_state_dir):
+            yaml_path = os.path.join(session_state_dir, sid, "workspace.yaml")
+            if os.path.exists(yaml_path):
+                try:
+                    with open(yaml_path, 'r') as f:
+                        content = f.read()
+                    cwd_match = re.search(r'^cwd:\s*(.+)$', content, re.MULTILINE)
+                    if cwd_match:
+                        yaml_cwd = cwd_match.group(1).strip()
+                        try:
+                            yaml_cwd_real = os.path.realpath(yaml_cwd)
+                        except Exception:
+                            yaml_cwd_real = yaml_cwd
+                            
+                        if yaml_cwd_real == target_cwd:
+                            mtime = os.path.getmtime(yaml_path)
+                            matching_sessions.append((mtime, sid))
+                except Exception:
+                    pass
+    except Exception:
+        pass
+        
+    if matching_sessions:
+        matching_sessions.sort(key=lambda x: x[0], reverse=True)
+        return matching_sessions[0][1]
+    return None
+
+def get_resume_info(pid, command_str, cwd):
     cmd_lower = command_str.lower()
     
     # 1. AIDER
@@ -99,24 +143,37 @@ def get_resume_info(pid, command_str):
         
     # 2. COPILOT
     if 'copilot' in cmd_lower:
-        match = re.search(r'--resume=([^\s]+)', command_str)
+        # Match --resume with space or equals, followed by 36-char UUID
+        match = re.search(r'--resume[=\s]+([a-f0-9\-]{36})', command_str)
         if match:
+            sid = match.group(1)
             return {
                 "agent_type": "copilot",
-                "session_id": match.group(1),
-                "resume_command": f"copilot --resume={match.group(1)}"
+                "session_id": sid,
+                "resume_command": f"copilot --resume {sid}"
             }
-        lsof_out = run_cmd(f"lsof -Fn -p {pid}")
+            
+        # Try to locate session via directory-to-CWD database mapping (offline/very reliable)
+        sid = find_copilot_session(cwd)
+        if sid:
+            return {
+                "agent_type": "copilot",
+                "session_id": sid,
+                "resume_command": f"copilot --resume {sid}"
+            }
+            
+        # Fallback: lsof inspection with fixed UUID regex (with short timeout)
+        lsof_out = run_cmd(f"lsof -Fn -p {pid}", timeout=2)
         if lsof_out:
             for line in lsof_out.splitlines():
                 if line.startswith('n') and '.copilot/session-state' in line:
-                    session_match = re.search(r'session-([a-f0-9\-]+)', line)
-                    if session_match:
-                        sid = session_match.group(1)
+                    uuid_match = re.search(r'([a-f0-9\-]{36})', line)
+                    if uuid_match:
+                        sid = uuid_match.group(1)
                         return {
                             "agent_type": "copilot",
                             "session_id": sid,
-                            "resume_command": f"copilot --resume={sid}"
+                            "resume_command": f"copilot --resume {sid}"
                         }
         return {
             "agent_type": "copilot",
@@ -132,7 +189,7 @@ def get_resume_info(pid, command_str):
                 "session_id": match.group(1),
                 "resume_command": f"agy --conversation {match.group(1)}"
             }
-        lsof_out = run_cmd(f"lsof -Fn -p {pid}")
+        lsof_out = run_cmd(f"lsof -Fn -p {pid}", timeout=2)
         if lsof_out:
             for line in lsof_out.splitlines():
                 if line.startswith('n') and '.gemini/antigravity' in line:
@@ -174,14 +231,16 @@ def do_save():
     for pane in panes:
         custom_pane_title = get_pane_title(pane["pane_id"])
         
-        proc = get_pane_process(pane["tty"])
+        procs = get_pane_processes(pane["tty"])
         info = None
-        if proc:
+        for proc in procs:
             pid = proc["pid"]
             full_cmd = get_full_command(pid)
             if not full_cmd:
                 full_cmd = proc["command"]
-            info = get_resume_info(pid, full_cmd)
+            info = get_resume_info(pid, full_cmd, pane["cwd"])
+            if info:
+                break
             
         # Save state for ALL panes
         session_entry = {
