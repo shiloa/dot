@@ -4,7 +4,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export TERM=xterm-256color
 
 # environment path
-export PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH
+export PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH:/Users/shiloa/.config/agency/CurrentVersion
 
 # locale seems to be important
 export LC_ALL=en_US.UTF-8
@@ -34,6 +34,9 @@ eval "$(nodenv init -)"
 # node/npm setup
 export NODE_PATH=$HOME/node_modules:/usr/local/lib/node_modules
 
+# dotnet config
+export DOTNET_ROOT="/opt/homebrew/opt/dotnet@8/libexec"
+
 # load rbenv
 # TODO if needed
 
@@ -42,7 +45,7 @@ export NODE_PATH=$HOME/node_modules:/usr/local/lib/node_modules
 #########################
 
 # vim is the preferred editor
-export EDITOR=lvim
+export EDITOR=nvim
 
 # less coloring configuration
 export LESS='-R'
@@ -50,4 +53,12 @@ export LESS='-R'
 #########################
 # Aliases
 #########################
-alias vi='lvim'
+alias vi='nvim'
+alias nuget='dotnet nuget'
+alias lg='lazygit'
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/shiloa/.local/bin:$PATH"
+
+alias vim='nvim'

@@ -31,7 +31,7 @@ prepend_path "/Library/Android/bin"
 # export JAVA_HOME=$(/usr/libexec/java_home)
 
 # .NET
-export DOTNET_ROOT="/usr/local/share/dotnet/x64"
+export DOTNET_ROOT="/opt/homebrew/opt/dotnet@8/libexec"
 prepend_path "$DOTNET_ROOT"
 prepend_path "$HOME/.dotnet/tools"
 prepend_path "/Applications/Rider.app/Contents/MacOS"
@@ -82,25 +82,25 @@ fi
 # Direnv
 if command -v direnv >/dev/null; then
   eval "$(direnv hook bash)"
-fi
 
 # Zoxide (Better z command)
 if command -v zoxide >/dev/null; then
   eval "$(zoxide init bash)"
 fi
+fi
 
 # --- 5. ALIASES ---
 
 # Basics
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
+alias ..="cd .." 
+alias ...="cd ../.." 
+alias ....="cd ../../.." 
 alias ls='ls -G' # Colorized ls on macOS
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias vi="lvim"
-alias vim="lvim"
+alias vi="nvim"
+alias vim="nvim"
 alias lg="lazygit"
 alias nuget="dotnet nuget"
 
@@ -165,3 +165,12 @@ export HISTCONTROL=ignoreboth:erasedups  # no duplicate entries
 export HISTSIZE=100000                   # big history
 export HISTFILESIZE=100000               # big history file
 shopt -s histappend                      # append to history, don't overwrite
+
+export PATH="${PATH}:/Users/shiloa/.azureauth/0.9.2"
+
+# Added by Agency Claude Code installer
+export PATH="/Users/shiloa/.claude-cli/currentVersion:$PATH"
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/shiloa/.local/bin:$PATH"

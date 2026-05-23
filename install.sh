@@ -66,9 +66,14 @@ brew install \
     xz
 
 # copy config files
+cp .zprofile ~/.zprofile
+cp .bashrc ~/.bashrc
 cp .gitconfig ~/.gitconfig
 cp .githelpers ~/.githelpers
 cp .vimrc ~/.vimrc
+# Setup Neovim config
+mkdir -p ~/.config/nvim
+cp -rv nvim/* ~/.config/nvim/
 cp .pylintrc ~/.pylincrc
 cp .tmux.conf ~/.tmux.conf
 
@@ -81,9 +86,14 @@ chmod +x ~/bin/tmux-agent-helper.py
 mkdir -p ~/.config/fish
 cp fish/*.fish ~/.config/fish
 
+# Install LunarVim (fallback)
+LV_BRANCH="release/1.4/master" bash <(curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release/1.4/master/utils/installer/install.sh) --yes
+
 # install vim-plug
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # run vim plug installations and exit
 vim +PlugInstall +PlugUpdate +PlugUpgrade +qall
+# Sync Neovim plugins
+nvim --headless "+Lazy! sync" +qa
