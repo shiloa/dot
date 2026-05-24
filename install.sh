@@ -76,6 +76,7 @@ mkdir -p ~/.config/nvim
 cp -rv nvim/* ~/.config/nvim/
 cp .pylintrc ~/.pylincrc
 cp .tmux.conf ~/.tmux.conf
+cp .wezterm.lua ~/.wezterm.lua
 
 # copy tmux agent helper script
 mkdir -p ~/bin
