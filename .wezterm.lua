@@ -19,8 +19,6 @@ return {
     -- Crisp rendering: light hinting + subpixel anti-aliasing
     freetype_load_target = 'Light',
     freetype_render_target = 'HorizontalLcd',
-    font_antialias = 'Subpixel',
-    font_hinting = 'Full',
 
     -- Appearance: iTerm2-style — pure black bg, white fg, classic ANSI palette
     colors = {
