@@ -96,23 +96,23 @@ set PATH $HOME/Library/Android/sdk/platform-tools $PATH
 
 source $HOME/.config/fish/fzf.fish
 
-function current_time
-    printf '%s' (date +%H:%M)
-end
+# function current_time
+#     printf '%s' (date +%H:%M)
+# end
 
-function fish_prompt
-    set_color normal
-    printf '%s ' (current_time)
+# function fish_prompt
+#     set_color normal
+#     printf '%s ' (current_time)
 
-    set_color purple
-    printf '%s' (prompt_pwd)
-    set_color normal
+#     set_color purple
+#     printf '%s' (prompt_pwd)
+#     set_color normal
 
-    # hg_prompt
-    # git_prompt
+#     # hg_prompt
+#     # git_prompt
 
-    echo ' $ '
-end
+#     echo ' $ '
+# end
 
 function whowas
     /usr/bin/ldapsearch -x -LLL -h ldap.amazon.com -b 'o=amazon.com' "(uid=$argv)" cn description
